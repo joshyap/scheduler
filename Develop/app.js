@@ -3,10 +3,10 @@ let currentDay = document.getElementById('currentDay');
 let currentTime = document.getElementById('currentTime');
 let now = new Date();
 
-currentDay.innerText = `${now.getMonth()}/${now.getDay()}/${now.getFullYear()}`;
-currentTime.innerText = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+currentDay.innerText = `${now.getMonth()+1}/${now.getDay()}/${now.getFullYear()}`;
+currentTime.innerText = `${now.getHours()}:${now.getMinutes()} - `;
 
-const createElements = () => {    
+const createElements = () => {
     for (i = 0; i < 24; i++) {
         let currentHour = currentTime.toString().split(":")[0];        
         let row = document.createElement('div');
@@ -15,14 +15,6 @@ const createElements = () => {
         let col3 = document.createElement('div');
         // add 0 to single digit i values
         (i.toString()).length < 2 ? col1.textContent = `0${i}:00` : col1.textContent = `${i}:00`;
-        // style based on current time                
-        if (i < now.getHours()) {
-            row.classList.add('past');
-        } else if (i === now.getHours()) {
-            row.classList.add('present');
-        } else {
-            row.classList.add('future');
-        }                
         col3.textContent = 'save';
         row.classList.add('row');
         col1.classList.add('col');
@@ -30,14 +22,13 @@ const createElements = () => {
         col2.id = `text${i}`;
         col2.setAttribute('contentEditable', 'true');
         col3.classList.add('col');
-        col3.addEventListener('click', function(e) {
-            save(e);            
-        });
+        col3.addEventListener('click', save);
         container.appendChild(row);
         row.append(col1);
         row.append(col2);
         row.append(col3);
     }
+    applyStyles();
 }
 
 const save = (e) => {
@@ -45,6 +36,15 @@ const save = (e) => {
     let timeSaveTarget = e.target.previousSibling.previousSibling.textContent;    
     localStorage.setItem(timeSaveTarget, task);
 }
+
+// const save = () => {
+//     // let task = this.previousSibling.textContent;
+//     let task = this;
+//     // let newTask = task.previousSibling.textContent;
+//     console.log(task);
+//     // let timeSaveTarget = this.previousSibling.previousSibling.textContent;    
+//     // return localStorage.setItem(timeSaveTarget, task);
+// }
 
 const loadSaved = () => {
     document.getElementById('text0').textContent = localStorage.getItem('00:00');    
@@ -74,5 +74,24 @@ const loadSaved = () => {
 }
 
 
+// function to apply styles to existing rows based on time
+const applyStyles = () => {    
+    let rows = document.querySelectorAll('.row');
+    for (var i=0; i<24; i++) {
+        if (parseInt(rows[i].firstChild.textContent) < now.getHours()) {
+            rows[i].classList.add('past');
+        } else if (parseInt(rows[i].firstChild.textContent) === now.getHours()) {
+            rows[i].classList.add('present');
+        } 
+        else {
+            rows[i].classList.add('future');
+        }   
+    }
+}
+
+
 createElements();
 loadSaved();
+
+// apply styles function is run on a timer to update through the day
+let interval = setInterval(applyStyles, 1500);
