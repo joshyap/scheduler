@@ -37,15 +37,6 @@ const save = (e) => {
     localStorage.setItem(timeSaveTarget, task);
 }
 
-// const save = () => {
-//     // let task = this.previousSibling.textContent;
-//     let task = this;
-//     // let newTask = task.previousSibling.textContent;
-//     console.log(task);
-//     // let timeSaveTarget = this.previousSibling.previousSibling.textContent;    
-//     // return localStorage.setItem(timeSaveTarget, task);
-// }
-
 const loadSaved = () => {
     document.getElementById('text0').textContent = localStorage.getItem('00:00');    
     document.getElementById('text1').textContent = localStorage.getItem('01:00');
@@ -76,11 +67,13 @@ const loadSaved = () => {
 
 // function to apply styles to existing rows based on time
 const applyStyles = () => {    
+    let newNow = new Date();
+    // console.log(`test logged at ${newNow.getTime()}`);
     let rows = document.querySelectorAll('.row');
     for (var i=0; i<24; i++) {
-        if (parseInt(rows[i].firstChild.textContent) < now.getHours()) {
+        if (parseInt(rows[i].firstChild.textContent) < newNow.getHours()) {
             rows[i].classList.add('past');
-        } else if (parseInt(rows[i].firstChild.textContent) === now.getHours()) {
+        } else if (parseInt(rows[i].firstChild.textContent) === newNow.getHours()) {
             rows[i].classList.add('present');
         } 
         else {
@@ -93,5 +86,4 @@ const applyStyles = () => {
 createElements();
 loadSaved();
 
-// apply styles function is run on a timer to update through the day
 let interval = setInterval(applyStyles, 1500);
