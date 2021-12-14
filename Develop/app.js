@@ -70,7 +70,9 @@ const applyStyles = () => {
     let newNow = new Date();
     // console.log(`test logged at ${newNow.getTime()}`);
     let rows = document.querySelectorAll('.row');
-    for (var i=0; i<24; i++) {
+    // row.classList.add('row');
+    for (var i=0; i<24; i++) {        
+        rows[i].classList.remove('past', 'present', 'future');
         if (parseInt(rows[i].firstChild.textContent) < newNow.getHours()) {
             rows[i].classList.add('past');
         } else if (parseInt(rows[i].firstChild.textContent) === newNow.getHours()) {
@@ -86,4 +88,4 @@ const applyStyles = () => {
 createElements();
 loadSaved();
 
-let interval = setInterval(applyStyles, 1500);
+let interval = setInterval(applyStyles, 5000);
